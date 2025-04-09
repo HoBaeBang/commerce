@@ -1,0 +1,250 @@
+openapi: 3.0.0
+info:
+  title: Commerce Project API
+  description: 상품 조회, 검색, 주문 및 결제 기능을 제공하는 API
+  version: 1.0.0
+  contact:
+    name: DEV
+    email: aslanhobae@gmail.com
+
+servers:
+  - url: https://commerce.aslan.com/v1
+    description: 운영 서버
+  - url: https://localhost:8080/v1
+    description: 로컬 환경
+
+tags:
+  - name: 상품
+    description: 상품 관련 API
+  - name: 주문&결제
+    description: 주문 및 결제 관련 API
+
+paths:
+  /products:
+    get:
+      tags:
+        - 상품
+      summary: 상품 리스트 조회 및 검색
+      description: 상품 리스트를 조회하거나 검색합니다. 키워드를 입력하면 검색 기능으로 작동합니다.
+      parameters:
+        - name: keyword
+          in: query
+          description: 검색 키워드
+          required: false
+          schema:
+            type: string
+        - name: page
+          in: query
+          description: 페이지 번호 (기본값 1)
+          required: false
+          schema:
+            type: integer
+            default: 1
+        - name: size
+          in: query
+          description: 페이지당 상품 수 (기본값 20)
+          required: false
+          schema:
+            type: integer
+            default: 20
+            maximum: 100
+        - name: minPrice
+          in: query
+          description: 최소 가격
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+        - name: maxPrice
+          in: query
+          description: 최대 가격
+          required: false
+          schema:
+            type: integer
+        - name: sort
+          in: query
+          description: 정렬 방식 (asc, desc)
+          required: false
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: asc
+      responses:
+        '200':
+          description: 성공적으로 상품 목록을 조회함
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductListResponse'
+        '400':
+          description: 잘못된 요청 파라미터
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                invalidPageParam:
+                  value:
+                    code: INVALID_PAGE_PARAM
+                    message: "페이지 번호는 1 이상이어야 합니다."
+                invalidSizeParam:
+                  value:
+                    code: INVALID_SIZE_PARAM
+                    message: "페이지당 상품 수는 1에서 100 사이여야 합니다."
+                invalidPriceRange:
+                  value:
+                    code: INVALID_PRICE_RANGE
+                    message: "최소 가격은 최대 가격보다 클 수 없습니다."
+        '500':
+          description: 서버 오류
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                serverError:
+                  value:
+                    code: SERVER_ERROR
+                    message: "서버 내부 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
+
+  /products/{productId}:
+    get:
+      tags:
+        - 상품
+      summary: 상품 상세 조회
+      description: 상품 ID로 상세 정보를 조회합니다.
+      parameters:
+        - name: productId
+          in: path
+          description: 조회할 상품 ID
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 성공적으로 상품 상세 정보를 조회함
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductDetail'
+        '404':
+          description: 존재하지 않는 상품
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                productNotFound:
+                  value:
+                    code: PRODUCT_NOT_FOUND
+                    message: "해당 ID의 상품을 찾을 수 없습니다."
+        '500':
+          description: 서버 오류
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                serverError:
+                  value:
+                    code: SERVER_ERROR
+                    message: "서버 내부 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
+
+
+components:
+  schemas:
+    ProductListResponse:
+      type: object
+      properties:
+        totalItems:
+          type: integer
+          description: 전체 상품 수
+          example: 1256
+        totalPages:
+          type: integer
+          description: 전체 페이지 수
+          example: 63
+        currentPage:
+          type: integer
+          description: 현재 페이지 번호
+          example: 1
+        products:
+          type: array
+          description: 상품 목록
+          items:
+            $ref: '#/components/schemas/ProductSummary'
+
+    ProductSummary:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: 상품 ID
+          example: 12345
+        name:
+          type: string
+          description: 상품명
+          example: "프리미엄 머그컵"
+        price:
+          type: integer
+          description: 상품 가격
+          example: 15000
+        imageUrl:
+          type: string
+          description: 이미지 URL
+          example: "https://example.com/images/products/12345.jpg"
+        stockQuantity:
+          type: integer
+          description: 재고 수량
+          example: 150
+
+    ProductDetail:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: 상품 ID
+          example: 12345
+        name:
+          type: string
+          description: 상품명
+          example: "프리미엄 머그컵"
+        price:
+          type: integer
+          description: 상품 가격
+          example: 15000
+        imageUrl:
+          type: string
+          description: 이미지 URL
+          example: "https://example.com/images/products/12345.jpg"
+        stockQuantity:
+          type: integer
+          description: 재고 수량
+          example: 150
+
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: string
+          description: 에러 코드
+          enum:
+            - INVALID_PRICE_RANGE    # 유효하지 않은 가격 범위
+            - INVALID_PAGE_PARAM     # 유효하지 않은 페이지 파라미터
+            - INVALID_SIZE_PARAM     # 유효하지 않은 사이즈 파라미터
+            - PRODUCT_NOT_FOUND      # 상품을 찾을 수 없음
+            - SERVER_ERROR           # 서버 오류
+          example: "INVALID_QUANTITY"
+        message:
+          type: string
+          description: 에러 메시지
+          example: "주문 수량은 1 이상이어야 합니다."
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+  - bearerAuth: []
