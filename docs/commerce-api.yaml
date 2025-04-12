@@ -20,12 +20,12 @@ tags:
     description: 주문 및 결제 관련 API
 
 paths:
-  /products:
+  /v1/products:
     get:
       tags:
         - 상품
       summary: 상품 리스트 조회 및 검색
-      description: 상품 리스트를 조회하거나 검색합니다. 키워드를 입력하면 검색 기능으로 작동합니다.
+      description: 상품 리스트를 조회하거나 검색합니다. 키워드를 입력하면 검색 기능으로 작동합니다. length 를 통해 페이지당 상품수를 설정 할수 있고 1~20까지의 값을 가질 수 있고 기본크기는 10입니다.
       parameters:
         - name: keyword
           in: query
@@ -33,29 +33,33 @@ paths:
           required: false
           schema:
             type: string
-        - name: page
+          example: iPhone 16
+        - name: start
           in: query
-          description: 페이지 번호 (기본값 1)
+          description: Row 시작
           required: false
           schema:
             type: integer
             default: 1
-        - name: size
+          example: 1
+        - name: length
           in: query
-          description: 페이지당 상품 수 (기본값 20)
+          description: Row 수(기본값 10)
           required: false
           schema:
             type: integer
-            default: 20
-            maximum: 100
-        - name: minPrice
+            default: 10
+            minimum: 1
+            maximum: 20
+          example: 10
+        - name: min_price
           in: query
           description: 최소 가격
           required: false
           schema:
             type: integer
             minimum: 0
-        - name: maxPrice
+        - name: max_price
           in: query
           description: 최대 가격
           required: false
@@ -75,46 +79,54 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProductListResponse'
+                $ref: '#/Components/Schemas/ProductListResponse'
         '400':
           description: 잘못된 요청 파라미터
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/Components/Schemas/ErrorResponse'
               examples:
                 invalidPageParam:
                   value:
-                    code: INVALID_PAGE_PARAM
-                    message: "페이지 번호는 1 이상이어야 합니다."
+                    error_code: INVALID_PAGE_PARAM
+                    error_message: "페이지 번호는 1 이상이어야 합니다."
+                    error_data:
+                      page: 'invalid_page'
                 invalidSizeParam:
                   value:
-                    code: INVALID_SIZE_PARAM
-                    message: "페이지당 상품 수는 1에서 100 사이여야 합니다."
+                    error_code: INVALID_SIZE_PARAM
+                    error_message: "페이지당 상품 수는 1에서 20 사이여야 합니다."
+                    error_data:
+                      page: 'invalid_page'
                 invalidPriceRange:
                   value:
-                    code: INVALID_PRICE_RANGE
-                    message: "최소 가격은 최대 가격보다 클 수 없습니다."
+                    error_code: INVALID_PRICE_RANGE
+                    error_message: "최소 가격은 최대 가격보다 클 수 없습니다."
+                    error_data:
+                      page: 'min_price'
         '500':
           description: 서버 오류
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/Components/Schemas/ErrorResponse'
               examples:
                 serverError:
                   value:
-                    code: SERVER_ERROR
-                    message: "서버 내부 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
+                    error_code: INVALID_PAGE_PARAM
+                    error_message: 'Invalid page param'
+                    error_data:
+                      page: 'invalid_page'
 
-  /products/{productId}:
+  /products/{product_id}:
     get:
       tags:
         - 상품
       summary: 상품 상세 조회
       description: 상품 ID로 상세 정보를 조회합니다.
       parameters:
-        - name: productId
+        - name: product_id
           in: path
           description: 조회할 상품 ID
           required: true
@@ -126,13 +138,26 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProductDetail'
+                $ref: '#/Components/Schemas/ProductDetail'
+        '400':
+          description: 잘못된 요청 파라미터
+          content:
+            application/json:
+              schema:
+                $ref: '#/Components/Schemas/ErrorResponse'
+              examples:
+                invalidPageParam:
+                  value:
+                    error_code: INVALID_TYPE_ID_PARAM
+                    error_message: "product_id의 타입이 int가 아닙니다."
+                    error_data:
+                      page: 'product_id = "sample_string_type_text"'
         '404':
           description: 존재하지 않는 상품
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/Components/Schemas/ErrorResponse'
               examples:
                 productNotFound:
                   value:
@@ -143,7 +168,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorResponse'
+                $ref: '#/Components/Schemas/ErrorResponse'
               examples:
                 serverError:
                   value:
@@ -151,8 +176,8 @@ paths:
                     message: "서버 내부 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
 
 
-components:
-  schemas:
+Components:
+  Schemas:
     ProductListResponse:
       type: object
       properties:
@@ -172,7 +197,7 @@ components:
           type: array
           description: 상품 목록
           items:
-            $ref: '#/components/schemas/ProductSummary'
+            $ref: '#/Components/Schemas/ProductSummary'
 
     ProductSummary:
       type: object
@@ -189,11 +214,11 @@ components:
           type: integer
           description: 상품 가격
           example: 15000
-        imageUrl:
+        image_url:
           type: string
           description: 이미지 URL
           example: "https://example.com/images/products/12345.jpg"
-        stockQuantity:
+        stock_quantity:
           type: integer
           description: 재고 수량
           example: 150
@@ -213,11 +238,11 @@ components:
           type: integer
           description: 상품 가격
           example: 15000
-        imageUrl:
+        image_url:
           type: string
           description: 이미지 URL
           example: "https://example.com/images/products/12345.jpg"
-        stockQuantity:
+        stock_quantity:
           type: integer
           description: 재고 수량
           example: 150
@@ -225,7 +250,7 @@ components:
     ErrorResponse:
       type: object
       properties:
-        code:
+        error_code:
           type: string
           description: 에러 코드
           enum:
@@ -235,10 +260,13 @@ components:
             - PRODUCT_NOT_FOUND      # 상품을 찾을 수 없음
             - SERVER_ERROR           # 서버 오류
           example: "INVALID_QUANTITY"
-        message:
+        error_message:
           type: string
           description: 에러 메시지
           example: "주문 수량은 1 이상이어야 합니다."
+        error_data:
+          type: string
+          description: 에러 항목(요청값)
 
   securitySchemes:
     bearerAuth:
