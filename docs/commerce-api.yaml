@@ -119,7 +119,7 @@ paths:
                     error_data:
                       page: 'invalid_page'
 
-  /products/{product_id}:
+  /v1/products/{product_id}:
     get:
       tags:
         - 상품
