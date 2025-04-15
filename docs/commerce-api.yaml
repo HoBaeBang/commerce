@@ -161,8 +161,10 @@ paths:
               examples:
                 productNotFound:
                   value:
-                    code: PRODUCT_NOT_FOUND
-                    message: "해당 ID의 상품을 찾을 수 없습니다."
+                    error_code: PRODUCT_NOT_FOUND
+                    error_message: "해당 ID의 상품을 찾을 수 없습니다."
+                    error_data:
+                      product_id: 'product_id'
         '500':
           description: 서버 오류
           content:
@@ -172,9 +174,9 @@ paths:
               examples:
                 serverError:
                   value:
-                    code: SERVER_ERROR
-                    message: "서버 내부 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
-
+                    error_code: SERVER_ERROR
+                    error_message: "서버 내부 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
+                    error_data:
 
 Components:
   Schemas:
