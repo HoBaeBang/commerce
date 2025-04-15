@@ -26,9 +26,9 @@ CREATE TABLE IF NOT EXISTS products (
 CREATE TABLE IF NOT EXISTS orders (
     id VARCHAR(36) PRIMARY KEY COMMENT '주문 ID (UUID)',
     order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '주문 일시',
-    status VARCHAR(20) NOT NULL COMMENT '주문 상태 (PENDING, PAID, CANCELLED, PAYMENT_FAILED, PAMENT_ERROR, EXPIRED)',
-    total_product_price INT NOT NULL COMMENT '상품 금액 합계',
-    total_shipping_fee INT NOT NULL DEFAULT 0 COMMENT '배송비 합계', --배송비 고정 3000원을 설정할 생각입니다.
+    order_status VARCHAR(20) NOT NULL COMMENT '주문 상태 (PENDING, PAID, CANCELLED, PAYMENT_FAILED, PAMENT_ERROR, EXPIRED)',
+    total_product_amount INT NOT NULL COMMENT '상품 금액 합계',
+    shipping_amount INT NOT NULL DEFAULT 0 COMMENT '배송비 합계', --배송비 고정 3000원을 설정할 생각입니다.
     payment_amount INT NOT NULL COMMENT '최종 결제 금액',
     payment_due_date TIMESTAMP NOT NULL COMMENT '결제 마감 시간',
     kakaopay_ready_url VARCHAR(512) COMMENT '카카오페이 결제 준비 URL',
