@@ -183,15 +183,15 @@ Components:
     ProductListResponse:
       type: object
       properties:
-        totalItems:
+        total_items:
           type: integer
           description: 전체 상품 수
           example: 1256
-        totalPages:
+        total_pages:
           type: integer
           description: 전체 페이지 수
           example: 63
-        currentPage:
+        current_page:
           type: integer
           description: 현재 페이지 번호
           example: 1
