@@ -58,8 +58,6 @@ CREATE TABLE IF NOT EXISTS order_items (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     order_id VARCHAR(36) NOT NULL COMMENT '주문 ID',
     product_id BIGINT NOT NULL COMMENT '상품 ID',
-    product_name VARCHAR(255) NOT NULL COMMENT '주문 시점의 상품명',
-    price INT NOT NULL COMMENT '주문 시점의 상품 가격',
     quantity INT NOT NULL COMMENT '주문 수량',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '생성일시',
 
