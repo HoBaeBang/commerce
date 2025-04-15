@@ -104,7 +104,7 @@ paths:
                     error_code: INVALID_PRICE_RANGE
                     error_message: "최소 가격은 최대 가격보다 클 수 없습니다."
                     error_data:
-                      page: 'min_price'
+                      price: 'min_price'
         '500':
           description: 서버 오류
           content:
