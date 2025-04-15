@@ -151,7 +151,7 @@ paths:
                     error_code: INVALID_TYPE_ID_PARAM
                     error_message: "product_id의 타입이 int가 아닙니다."
                     error_data:
-                      page: 'product_id = "sample_string_type_text"'
+                      product_id: "sample_string_type_text"
         '404':
           description: 존재하지 않는 상품
           content:
