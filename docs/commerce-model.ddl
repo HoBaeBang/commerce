@@ -77,7 +77,6 @@ CREATE TABLE IF NOT EXISTS payments (
     payment_method VARCHAR(20) NOT NULL DEFAULT 'KAKAO_PAY' COMMENT '결제 수단',
     amount INT NOT NULL COMMENT '결제 금액',
     paid_at TIMESTAMP NULL COMMENT '결제 완료 시간',
-    receipt_url VARCHAR(512) COMMENT '영수증 URL',
     pg_token VARCHAR(255) COMMENT '결제 게이트웨이 토큰',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '생성일시',
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일시',
