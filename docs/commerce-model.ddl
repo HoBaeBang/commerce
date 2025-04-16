@@ -35,8 +35,8 @@ CREATE TABLE IF NOT EXISTS orders (
 
     -- 배송지 정보
     shipping_zipcode VARCHAR(10) NOT NULL COMMENT '배송지 우편번호',
-    shipping_address1 VARCHAR(255) NOT NULL COMMENT '배송지 기본 주소',
-    shipping_address2 VARCHAR(255) NOT NULL COMMENT '배송지 상세 주소',
+    shipping_address VARCHAR(255) NOT NULL COMMENT '배송지 기본 주소',
+    shipping_address_detail VARCHAR(255) NOT NULL COMMENT '배송지 상세 주소',
 
     -- 수령인 정보
     receiver_name VARCHAR(50) NOT NULL COMMENT '수령인 이름',
