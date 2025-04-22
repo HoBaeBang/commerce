@@ -338,7 +338,7 @@ Components:
       type: object
       required:
         - items
-        - shippingAddress
+        - shipping_address
         - receiverInfo
       properties:
         items:
@@ -347,7 +347,7 @@ Components:
           items:
             type: object
             required:
-              - productId
+              - product_id
               - quantity
             properties:
               product_id:
