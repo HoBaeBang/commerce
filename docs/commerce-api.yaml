@@ -396,7 +396,7 @@ Components:
           description: 배송 메모
           example: "부재시 경비실에 맡겨주세요"
 
-    OrderResponse:
+    OrderRequestV1:
       type: object
       properties:
         order_id:
