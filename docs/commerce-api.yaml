@@ -188,14 +188,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/OrderRequest'
+              $ref: '#/Components/Schemas/OrderRequestV1'
+              
       responses:
         '201':
           description: 주문이 성공적으로 생성됨
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/OrderResponse'
+                $ref: '#/Components/Schemas/OrderRequestV1'
+
         '400':
           description: 잘못된 요청 파라미터
           content:
@@ -230,6 +232,13 @@ paths:
                     error_message: "유효하지 않은 우편번호 형식입니다."
                     error_data:
                       zip_code: '23a4f'
+
+                insufficientStock:
+                  value:
+                    error_code: INSUFFICIENT_STOCK
+                    error_message: "상품의 재고가 부족합니다."
+                    error_data:
+                      product_id: 'product_id'
         '404':
           description: 존재하지 않는 상품
           content:
@@ -243,19 +252,7 @@ paths:
                     error_message: "주문하려는 상품을 찾을 수 없습니다."
                     error_data:
                       product_id: 'product_id'
-        '409':
-          description: 재고 부족
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              examples:
-                insufficientStock:
-                  value:
-                    error_code: INSUFFICIENT_STOCK
-                    error_message: "상품의 재고가 부족합니다."
-                    error_data:
-                      product_id: 'product_id'
+
         '500':
           description: 서버 오류
           content:
@@ -437,7 +434,7 @@ components:
       type: object
       required:
         - items
-        - shippingAddress
+        - shipping_address
         - receiverInfo
       properties:
         items:
@@ -446,7 +443,7 @@ components:
           items:
             type: object
             required:
-              - productId
+              - product_id
               - quantity
             properties:
               product_id:
@@ -495,7 +492,7 @@ components:
           description: 배송 메모
           example: "부재시 경비실에 맡겨주세요"
 
-    OrderResponse:
+    OrderRequestV1:
       type: object
       properties:
         order_id:
@@ -511,55 +508,26 @@ components:
           type: string
           description: 주문 상태
           example: "PENDING_PAYMENT"
-          enum: [ PENDING, PAID, CANCELLED, PAYMENT_FAILED, PAMENT_ERROR, EXPIRED ]
+          enum:
+            - PENDING,
+            - PAID,
+            - CANCELLED,
+            - PAYMENT_FAILED,
+            - PAMENT_ERROR,
+            - EXPIRED
         items:
-          type: array
+          type: object
           description: 주문 상품 목록
-          items:
-            type: object
-            properties:
-              product_id:
-                type: integer
-                description: 상품 ID
-                example: 12345
-              product_name:
-                type: string
-                description: 상품명
-                example: "프리미엄 머그컵"
-              quantity:
-                type: integer
-                description: 수량
-                example: 2
-              price:
-                type: integer
-                description: 개당 가격
-                example: 15000
+          properties :
+          $ref : '#/Components/Schemas/OrderRequestV1Items'
         shipping_address:
           type: object
           properties:
-            zip_code:
-              type: string
-              description: 우편번호
-              example: "06164"
-            address:
-              type: string
-              description: 기본 주소
-              example: "서울특별시 강남구 테헤란로 123"
-            address_detail:
-              type: string
-              description: 상세 주소
-              example: "456동 789호"
+          $ref : '#/Components/Schemas/OrderRequestV1ShippingAddress'
         receiverInfo:
           type: object
           properties:
-            name:
-              type: string
-              description: 수령인 이름
-              example: "홍길동"
-            phone:
-              type: string
-              description: 연락처
-              example: "010-1234-5678"
+          $ref : '#/Components/Schemas/OrderRequestV1ReceiverInfo'
         memo:
           type: string
           description: 배송 메모
@@ -624,6 +592,55 @@ components:
           format: date-time
           description: 결제 완료 시간
           example: "2025-04-06T15:35:12Z"
+
+    OrderRequestV1Items:
+      type: object
+      properties:
+        product_id:
+          type: integer
+          description: 상품 ID
+          example: 12345
+        product_name:
+          type: string
+          description: 상품명
+          example: "프리미엄 머그컵"
+        quantity:
+          type: integer
+          description: 수량
+          example: 2
+        price:
+          type: integer
+          description: 개당 가격
+          example: 15000
+
+    OrderRequestV1ShippingAddress:
+      type: object
+      properties:
+        zip_code:
+          type: string
+          description: 우편번호
+          example: "06164"
+        address:
+          type: string
+          description: 기본 주소
+          example: "서울특별시 강남구 테헤란로 123"
+        address_detail:
+          type: string
+          description: 상세 주소
+          example: "456동 789호"
+
+    OrderRequestV1ReceiverInfo:
+      type: object
+      properties:
+        name:
+          type: string
+          description: 수령인 이름
+          example: "홍길동"
+        phone:
+          type: string
+          description: 연락처
+          example: "010-1234-5678"
+
 
     ErrorResponse:
       type: object
