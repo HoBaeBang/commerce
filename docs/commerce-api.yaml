@@ -513,7 +513,7 @@ components:
             - PAID,
             - CANCELLED,
             - PAYMENT_FAILED,
-            - PAMENT_ERROR,
+            - PAYMENT_ERROR,
             - EXPIRED
         items:
           type: object
