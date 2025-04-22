@@ -412,7 +412,13 @@ Components:
           type: string
           description: 주문 상태
           example: "PENDING_PAYMENT"
-          enum: [ PENDING, PAID, CANCELLED, PAYMENT_FAILED, PAMENT_ERROR, EXPIRED ]
+          enum:
+            - PENDING,
+            - PAID,
+            - CANCELLED,
+            - PAYMENT_FAILED,
+            - PAMENT_ERROR,
+            - EXPIRED
         items:
           type: array
           description: 주문 상품 목록
