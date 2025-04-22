@@ -230,6 +230,13 @@ paths:
                     error_message: "유효하지 않은 우편번호 형식입니다."
                     error_data:
                       zip_code: '23a4f'
+
+                insufficientStock:
+                  value:
+                    error_code: INSUFFICIENT_STOCK
+                    error_message: "상품의 재고가 부족합니다."
+                    error_data:
+                      product_id: 'product_id'
         '404':
           description: 존재하지 않는 상품
           content:
@@ -243,19 +250,7 @@ paths:
                     error_message: "주문하려는 상품을 찾을 수 없습니다."
                     error_data:
                       product_id: 'product_id'
-        '409':
-          description: 재고 부족
-          content:
-            application/json:
-              schema:
-                $ref: '#/Components/Schemas/ErrorResponse'
-              examples:
-                insufficientStock:
-                  value:
-                    error_code: INSUFFICIENT_STOCK
-                    error_message: "상품의 재고가 부족합니다."
-                    error_data:
-                      product_id: 'product_id'
+
         '500':
           description: 서버 오류
           content:
