@@ -188,7 +188,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/Components/Schemas/OrderRequestV1'
+              $ref: '#/components/schemas/OrderRequestV1'
               
       responses:
         '201':
@@ -196,7 +196,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/Components/Schemas/OrderRequestV1'
+                $ref: '#/components/schemas/OrderRequestV1'
 
         '400':
           description: 잘못된 요청 파라미터
@@ -519,15 +519,15 @@ components:
           type: object
           description: 주문 상품 목록
           properties :
-          $ref : '#/Components/Schemas/OrderRequestV1Items'
+          $ref : '#/components/schemas/OrderRequestV1Items'
         shipping_address:
           type: object
           properties:
-          $ref : '#/Components/Schemas/OrderRequestV1ShippingAddress'
+          $ref : '#/components/schemas/OrderRequestV1ShippingAddress'
         receiverInfo:
           type: object
           properties:
-          $ref : '#/Components/Schemas/OrderRequestV1ReceiverInfo'
+          $ref : '#/components/schemas/OrderRequestV1ReceiverInfo'
         memo:
           type: string
           description: 배송 메모
@@ -553,6 +553,7 @@ components:
           type: string
           description: 카카오페이 결제 준비 URL
           example: "https://online-pay.kakao.com/mockup/v1/1d61e5d6..."
+
     PaymentRequest:
       type: object
       required:
