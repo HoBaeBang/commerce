@@ -420,53 +420,18 @@ Components:
             - PAMENT_ERROR,
             - EXPIRED
         items:
-          type: array
+          type: object
           description: 주문 상품 목록
-          items:
-            type: object
-            properties:
-              product_id:
-                type: integer
-                description: 상품 ID
-                example: 12345
-              product_name:
-                type: string
-                description: 상품명
-                example: "프리미엄 머그컵"
-              quantity:
-                type: integer
-                description: 수량
-                example: 2
-              price:
-                type: integer
-                description: 개당 가격
-                example: 15000
+          properties :
+          $ref : '#/Components/Schemas/OrderRequestV1Items'
         shipping_address:
           type: object
           properties:
-            zip_code:
-              type: string
-              description: 우편번호
-              example: "06164"
-            address:
-              type: string
-              description: 기본 주소
-              example: "서울특별시 강남구 테헤란로 123"
-            address_detail:
-              type: string
-              description: 상세 주소
-              example: "456동 789호"
+          $ref : '#/Components/Schemas/OrderRequestV1ShippingAddress'
         receiverInfo:
           type: object
           properties:
-            name:
-              type: string
-              description: 수령인 이름
-              example: "홍길동"
-            phone:
-              type: string
-              description: 연락처
-              example: "010-1234-5678"
+          $ref : '#/Components/Schemas/OrderRequestV1ReceiverInfo'
         memo:
           type: string
           description: 배송 메모
@@ -492,6 +457,55 @@ Components:
           type: string
           description: 카카오페이 결제 준비 URL
           example: "https://online-pay.kakao.com/mockup/v1/1d61e5d6..."
+
+    OrderRequestV1Items:
+      type: object
+      properties:
+        product_id:
+          type: integer
+          description: 상품 ID
+          example: 12345
+        product_name:
+          type: string
+          description: 상품명
+          example: "프리미엄 머그컵"
+        quantity:
+          type: integer
+          description: 수량
+          example: 2
+        price:
+          type: integer
+          description: 개당 가격
+          example: 15000
+
+    OrderRequestV1ShippingAddress:
+      type: object
+      properties:
+        zip_code:
+          type: string
+          description: 우편번호
+          example: "06164"
+        address:
+          type: string
+          description: 기본 주소
+          example: "서울특별시 강남구 테헤란로 123"
+        address_detail:
+          type: string
+          description: 상세 주소
+          example: "456동 789호"
+
+    OrderRequestV1ReceiverInfo:
+      type: object
+      properties:
+        name:
+          type: string
+          description: 수령인 이름
+          example: "홍길동"
+        phone:
+          type: string
+          description: 연락처
+          example: "010-1234-5678"
+
 
     ErrorResponse:
       type: object
