@@ -188,14 +188,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/Components/Schemas/OrderRequest'
+              $ref: '#/Components/Schemas/OrderRequestV1'
       responses:
         '201':
           description: 주문이 성공적으로 생성됨
           content:
             application/json:
               schema:
-                $ref: '#/Components/Schemas/OrderResponse'
+                $ref: '#/Components/Schemas/OrderRequestV1'
         '400':
           description: 잘못된 요청 파라미터
           content:
