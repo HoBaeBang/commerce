@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS products (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL COMMENT '상품명',
     price INT NOT NULL COMMENT '상품 가격',
-    image_url VARCHAR(512) COMMENT '이미지 URL',
+    image_url TEXT COMMENT '이미지 URL',
     stock_quantity INT NOT NULL DEFAULT 0 COMMENT '재고 수량',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '생성일시',
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일시',
@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS orders (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일시',
 
     -- 검색을한다면 주문 상태, 주문 일시, 결제 마감기한에 대해서 검색할것 같아 인덱스를 설정하였습니다.
-    INDEX idx_order_status (status),
+    INDEX idx_order_status (order_status),
     INDEX idx_order_date (order_date),
     INDEX idx_payment_due_date (payment_due_date)
     ) COMMENT '주문 정보';
