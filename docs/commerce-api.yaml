@@ -516,17 +516,10 @@ components:
             - PAYMENT_ERROR,
             - EXPIRED
         items:
-          type: object
-          description: 주문 상품 목록
-          properties :
           $ref : '#/components/schemas/OrderRequestV1Items'
         shipping_address:
-          type: object
-          properties:
           $ref : '#/components/schemas/OrderRequestV1ShippingAddress'
         receiverInfo:
-          type: object
-          properties:
           $ref : '#/components/schemas/OrderRequestV1ReceiverInfo'
         memo:
           type: string
@@ -596,6 +589,7 @@ components:
 
     OrderRequestV1Items:
       type: object
+      description : 주문 상품 목록
       properties:
         product_id:
           type: integer
