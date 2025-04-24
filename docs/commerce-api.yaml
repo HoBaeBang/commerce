@@ -196,7 +196,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/OrderRequestV1'
+                $ref: '#/components/schemas/OrderResponseV1'
 
         '400':
           description: 잘못된 요청 파라미터
@@ -266,7 +266,7 @@ paths:
                     error_message: "서버 내부 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
                     error_data:
 
-  /v1/orders/{order_id}/payment:
+  /v1/orders/{order_id}:
     patch:
       tags:
         - 주문&결제
@@ -292,7 +292,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaymentResponse'
+                $ref: '#/components/schemas/OrderResponseV1'
         '400':
           description: 잘못된 요청 파라미터
           content:
@@ -430,7 +430,7 @@ components:
           description: 재고 수량
           example: 150
 
-    OrderRequest:
+    OrderRequestV1:
       type: object
       required:
         - items
@@ -492,7 +492,7 @@ components:
           description: 배송 메모
           example: "부재시 경비실에 맡겨주세요"
 
-    OrderRequestV1:
+    OrderResponseV1:
       type: object
       properties:
         order_id:
@@ -533,6 +533,10 @@ components:
           type: integer
           description: 배송비 합계
           example: 3000
+        payment_id:
+          type: string
+          description: 결제 ID
+          example: "PAY20240406123456"
         payment_amount:
           type: integer
           description: 최종 결제 금액
@@ -556,36 +560,6 @@ components:
           type: string
           description: 카카오페이 결제 승인 토큰
           example: "T1234567890abcdefghij"
-
-    PaymentResponse:
-      type: object
-      properties:
-        payment_id:
-          type: string
-          description: 결제 ID
-          example: "PAY20240406123456"
-        order_id:
-          type: string
-          description: 주문 ID
-          example: "ORD20240406123456"
-        status:
-          type: string
-          description: 결제 상태
-          example: "SUCCESS"
-          enum: [ SUCCESS, FAILED, PENDING, CANCELED, REFUNDED ]
-        payment_method:
-          type: string
-          description: 결제 수단
-          example: "KAKAO_PAY"
-        amount:
-          type: integer
-          description: 결제 금액
-          example: 32000
-        paid_at:
-          type: string
-          format: date-time
-          description: 결제 완료 시간
-          example: "2025-04-06T15:35:12Z"
 
     OrderRequestV1Items:
       type: object
