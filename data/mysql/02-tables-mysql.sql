@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS orders (
     receiver_name VARCHAR(50) NOT NULL COMMENT '수령인 이름',
     receiver_phone VARCHAR(20) NOT NULL COMMENT '수령인 전화번호',
 
-    memo TEXT COMMENT '배송 메모',
+    shipping_memo VARCHAR(255) COMMENT '배송 메모',
     -- 기본값 설정
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '생성일시',
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일시',
