@@ -79,13 +79,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/Components/Schemas/ProductListResponse'
+                $ref: '#/components/schemas/ProductListResponse'
         '400':
           description: 잘못된 요청 파라미터
           content:
             application/json:
               schema:
-                $ref: '#/Components/Schemas/ErrorResponse'
+                $ref: '#/components/schemas/ErrorResponse'
               examples:
                 invalidPageParam:
                   value:
@@ -110,7 +110,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/Components/Schemas/ErrorResponse'
+                $ref: '#/components/schemas/ErrorResponse'
               examples:
                 serverError:
                   value:
@@ -138,13 +138,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/Components/Schemas/ProductDetail'
+                $ref: '#/components/schemas/ProductDetail'
         '400':
           description: 잘못된 요청 파라미터
           content:
             application/json:
               schema:
-                $ref: '#/Components/Schemas/ErrorResponse'
+                $ref: '#/components/schemas/ErrorResponse'
               examples:
                 invalidPageParam:
                   value:
@@ -157,7 +157,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/Components/Schemas/ErrorResponse'
+                $ref: '#/components/schemas/ErrorResponse'
               examples:
                 productNotFound:
                   value:
@@ -170,7 +170,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/Components/Schemas/ErrorResponse'
+                $ref: '#/components/schemas/ErrorResponse'
               examples:
                 serverError:
                   value:
@@ -188,20 +188,20 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/Components/Schemas/OrderRequestV1'
+              $ref: '#/components/schemas/OrderRequestV1'
       responses:
         '201':
           description: 주문이 성공적으로 생성됨
           content:
             application/json:
               schema:
-                $ref: '#/Components/Schemas/OrderRequestV1'
+                $ref: '#/components/schemas/OrderRequestV1'
         '400':
           description: 잘못된 요청 파라미터
           content:
             application/json:
               schema:
-                $ref: '#/Components/Schemas/ErrorResponse'
+                $ref: '#/components/schemas/ErrorResponse'
               examples:
                 invalidQuantity:
                   value:
@@ -242,7 +242,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/Components/Schemas/ErrorResponse'
+                $ref: '#/components/schemas/ErrorResponse'
               examples:
                 productNotFound:
                   value:
@@ -256,15 +256,15 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/Components/Schemas/ErrorResponse'
+                $ref: '#/components/schemas/ErrorResponse'
               examples:
                 serverError:
                   value:
                     error_code: SERVER_ERROR
                     error_message: "서버 내부 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
                     error_data:
-Components:
-  Schemas:
+components:
+  schemas:
     ProductListResponse:
       type: object
       properties:
@@ -284,7 +284,7 @@ Components:
           type: array
           description: 상품 목록
           items:
-            $ref: '#/Components/Schemas/ProductSummary'
+            $ref: '#/components/schemas/ProductSummary'
 
     ProductSummary:
       type: object
@@ -334,68 +334,6 @@ Components:
           description: 재고 수량
           example: 150
 
-    OrderRequest:
-      type: object
-      required:
-        - items
-        - shipping_address
-        - receiverInfo
-      properties:
-        items:
-          type: array
-          description: 주문 상품 목록
-          items:
-            type: object
-            required:
-              - product_id
-              - quantity
-            properties:
-              product_id:
-                type: integer
-                description: 상품 ID
-                example: 12345
-              quantity:
-                type: integer
-                description: 수량
-                example: 2
-        shipping_address:
-          type: object
-          required:
-            - zip_code
-            - address
-            - address_detail
-          properties:
-            zip_code:
-              type: string
-              description: 우편번호
-              example: "06164"
-            address:
-              type: string
-              description: 기본 주소
-              example: "서울특별시 강남구 테헤란로 123"
-            address_detail:
-              type: string
-              description: 상세 주소
-              example: "456동 789호"
-        receiver_info:
-          type: object
-          required:
-            - name
-            - phone
-          properties:
-            name:
-              type: string
-              description: 수령인 이름
-              example: "홍길동"
-            phone:
-              type: string
-              description: 연락처
-              example: "010-1234-5678"
-        memo:
-          type: string
-          description: 배송 메모
-          example: "부재시 경비실에 맡겨주세요"
-
     OrderRequestV1:
       type: object
       properties:
@@ -420,18 +358,11 @@ Components:
             - PAMENT_ERROR,
             - EXPIRED
         items:
-          type: object
-          description: 주문 상품 목록
-          properties :
-          $ref : '#/Components/Schemas/OrderRequestV1Items'
+          $ref : '#/components/schemas/OrderRequestV1Items'
         shipping_address:
-          type: object
-          properties:
-          $ref : '#/Components/Schemas/OrderRequestV1ShippingAddress'
+          $ref : '#/components/schemas/OrderRequestV1ShippingAddress'
         receiverInfo:
-          type: object
-          properties:
-          $ref : '#/Components/Schemas/OrderRequestV1ReceiverInfo'
+          $ref : '#/components/schemas/OrderRequestV1ReceiverInfo'
         memo:
           type: string
           description: 배송 메모
