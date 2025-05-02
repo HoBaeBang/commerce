@@ -22,6 +22,46 @@ public class ProductControllerTest {
     @InjectMocks
     private ProductController productController;
 
+    private ProductListResponseDto productListResponse;
+    private ProductDetailDto productDetail;
+
+    @BeforeEach
+    void setUp() {
+        // MockMvc 설정
+        mockMvc = MockMvcBuilders.standaloneSetup(productController)
+                .setControllerAdvice(new GlobalExceptionHandler())
+                .build();
+
+        // 테스트 데이터 설정
+        ProductSummaryDto product1 = ProductSummaryDto.builder()
+                .id(1L)
+                .name("상품 1")
+                .price(10000)
+                .stockQuantity(100)
+                .build();
+
+        ProductSummaryDto product2 = ProductSummaryDto.builder()
+                .id(2L)
+                .name("상품 2")
+                .price(20000)
+                .stockQuantity(50)
+                .build();
+
+        productListResponse = ProductListResponseDto.builder()
+                .totalItems(2)
+                .totalPages(1)
+                .currentPage(1)
+                .products(Arrays.asList(product1, product2))
+                .build();
+
+        productDetail = ProductDetailDto.builder()
+                .id(1L)
+                .name("상품 1")
+                .price(10000)
+                .stockQuantity(100)
+                .build();
+    }
+
     // RED CASE
 
     @Test
