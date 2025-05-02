@@ -6,9 +6,9 @@ public enum SortDirection {
 
     public static SortDirection fromString(String value) {
         try {
-            return value != null ? SortDirection.valueOf(value.toUpperCase()) : SortDirection.asc;
+            return value != null ? SortDirection.valueOf(value.toUpperCase()) : SortDirection.ASC;
         } catch (Exception e) {
-            return SortDirection.desc;
+            return SortDirection.DESC;
         }
     }
 }
