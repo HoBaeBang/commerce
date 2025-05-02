@@ -197,7 +197,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/OrderResponseV1'
-
         '400':
           description: 잘못된 요청 파라미터
           content:
@@ -359,6 +358,7 @@ paths:
                     error_code: SERVER_ERROR
                     error_message: "서버 내부 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
                     error_data: { }
+
 components:
   schemas:
     ProductListResponse:
