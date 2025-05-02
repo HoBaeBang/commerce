@@ -18,7 +18,7 @@ public class ProductController {
 
     @Operation(summary = "상품 리스트 조회 및 검색")
     @GetMapping
-    public ResponseEntity getProductsList(
+    public void getProductsList(
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false, defaultValue = "1") @Min(1) Integer start,
             @RequestParam(required = false, defaultValue = "10") @Min(1) @Max(20) Integer length,
