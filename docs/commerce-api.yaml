@@ -79,13 +79,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/Components/Schemas/ProductListResponse'
+                $ref: '#/components/schemas/ProductListResponse'
         '400':
           description: 잘못된 요청 파라미터
           content:
             application/json:
               schema:
-                $ref: '#/Components/Schemas/ErrorResponse'
+                $ref: '#/components/schemas/ErrorResponse'
               examples:
                 invalidPageParam:
                   value:
@@ -110,7 +110,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/Components/Schemas/ErrorResponse'
+                $ref: '#/components/schemas/ErrorResponse'
               examples:
                 serverError:
                   value:
@@ -138,13 +138,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/Components/Schemas/ProductDetail'
+                $ref: '#/components/schemas/ProductDetail'
         '400':
           description: 잘못된 요청 파라미터
           content:
             application/json:
               schema:
-                $ref: '#/Components/Schemas/ErrorResponse'
+                $ref: '#/components/schemas/ErrorResponse'
               examples:
                 invalidPageParam:
                   value:
@@ -157,7 +157,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/Components/Schemas/ErrorResponse'
+                $ref: '#/components/schemas/ErrorResponse'
               examples:
                 productNotFound:
                   value:
@@ -170,7 +170,94 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/Components/Schemas/ErrorResponse'
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                serverError:
+                  value:
+                    error_code: SERVER_ERROR
+                    error_message: "서버 내부 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
+                    error_data:
+  /v1/orders:
+    post:
+      tags:
+        - 주문&결제
+      summary: 주문 생성
+      description: 상품을 주문합니다.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderRequestV1'
+              
+      responses:
+        '201':
+          description: 주문이 성공적으로 생성됨
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderResponseV1'
+        '400':
+          description: 잘못된 요청 파라미터
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                invalidQuantity:
+                  value:
+                    error_code: INVALID_QUANTITY
+                    error_message: "주문 수량은 1 이상이어야 합니다."
+                    error_data:
+                      quantity: 'quantity'
+
+                requiredFieldMissing:
+                  value:
+                    error_code: REQUIRED_FIELD_MISSING
+                    error_message: "필수 입력 필드가 누락되었습니다."
+                    error_data:
+                      required: 'items.quantity'
+
+                invalidPhoneFormat:
+                  value:
+                    error_code: INVALID_PHONE_FORMAT
+                    error_message: "유효하지 않은 전화번호 형식입니다."
+                    error_data:
+                      phone: '1113333555'
+
+                invalidZipcodeFormat:
+                  value:
+                    error_code: INVALID_ZIPCODE_FORMAT
+                    error_message: "유효하지 않은 우편번호 형식입니다."
+                    error_data:
+                      zip_code: '23a4f'
+
+                insufficientStock:
+                  value:
+                    error_code: INSUFFICIENT_STOCK
+                    error_message: "상품의 재고가 부족합니다."
+                    error_data:
+                      product_id: 'product_id'
+        '404':
+          description: 존재하지 않는 상품
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                productNotFound:
+                  value:
+                    error_code: PRODUCT_NOT_FOUND
+                    error_message: "주문하려는 상품을 찾을 수 없습니다."
+                    error_data:
+                      product_id: 'product_id'
+
+        '500':
+          description: 서버 오류
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
               examples:
                 serverError:
                   value:
@@ -178,8 +265,102 @@ paths:
                     error_message: "서버 내부 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
                     error_data:
 
-Components:
-  Schemas:
+  /v1/orders/{order_id}:
+    patch:
+      tags:
+        - 주문&결제
+      summary: 결제 처리
+      description: 주문에 대한 결제를 처리합니다. 카카오페이를 이용한 결제를 진행합니다.
+      parameters:
+        - name: order_id
+          in: path
+          description: 결제할 주문 ID
+          required: true
+          schema:
+            type: string
+            example: "ORD20240406123456"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentRequest'
+      responses:
+        '200':
+          description: 결제가 성공적으로 처리됨
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderResponseV1'
+        '400':
+          description: 잘못된 요청 파라미터
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                invalidPaymentToken:
+                  value:
+                    error_code: INVALID_PAYMENT_TOKEN
+                    error_message: "유효하지 않은 결제 토큰입니다."
+                    error_data:
+                      pg_token: 'pg_token'
+                requiredFieldMissing:
+                  value:
+                    error_code: REQUIRED_FIELD_MISSING
+                    error_message: "필수 입력 필드가 누락되었습니다."
+                    error_data:
+                      required: 'pg_token'
+        '402':
+          description: 결제 실패
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                paymentFailed:
+                  value:
+                    error_code: PAYMENT_FAILED
+                    error_message: "결제가 실패했습니다. 결제 수단을 확인해주세요."
+                    error_data: { }
+                paymentTimeout:
+                  value:
+                    error_code: PAYMENT_TIMEOUT   # code -> error_code 변경
+                    error_message: "결제 시간이 초과되었습니다."  # message -> error_message 변경
+                    error_data: { }
+                paymentAmountMismatch:
+                  value:
+                    error_code: PAYMENT_AMOUNT_MISMATCH  # code -> error_code 변경
+                    error_message: "결제 금액이 주문 금액과 일치하지 않습니다."  # message -> error_message 변경
+                    error_data: { }
+        '404':
+          description: 존재하지 않는 주문
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                orderNotFound:
+                  value:
+                    error_code: ORDER_NOT_FOUND
+                    error_message: "해당 ID의 주문을 찾을 수 없습니다."
+                    error_data:
+                      order_id: 'order_id'
+        '500':
+          description: 서버 오류
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                serverError:
+                  value:
+                    error_code: SERVER_ERROR
+                    error_message: "서버 내부 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
+                    error_data: { }
+
+components:
+  schemas:
     ProductListResponse:
       type: object
       properties:
@@ -199,7 +380,7 @@ Components:
           type: array
           description: 상품 목록
           items:
-            $ref: '#/Components/Schemas/ProductSummary'
+            $ref: '#/components/schemas/ProductSummary'
 
     ProductSummary:
       type: object
@@ -249,6 +430,187 @@ Components:
           description: 재고 수량
           example: 150
 
+    OrderRequestV1:
+      type: object
+      required:
+        - items
+        - shipping_address
+        - receiverInfo
+      properties:
+        items:
+          type: array
+          description: 주문 상품 목록
+          items:
+            type: object
+            required:
+              - product_id
+              - quantity
+            properties:
+              product_id:
+                type: integer
+                description: 상품 ID
+                example: 12345
+              quantity:
+                type: integer
+                description: 수량
+                example: 2
+        shipping_address:
+          type: object
+          required:
+            - zip_code
+            - address
+            - address_detail
+          properties:
+            zip_code:
+              type: string
+              description: 우편번호
+              example: "06164"
+            address:
+              type: string
+              description: 기본 주소
+              example: "서울특별시 강남구 테헤란로 123"
+            address_detail:
+              type: string
+              description: 상세 주소
+              example: "456동 789호"
+        receiver_info:
+          type: object
+          required:
+            - name
+            - phone
+          properties:
+            name:
+              type: string
+              description: 수령인 이름
+              example: "홍길동"
+            phone:
+              type: string
+              description: 연락처
+              example: "010-1234-5678"
+        memo:
+          type: string
+          description: 배송 메모
+          example: "부재시 경비실에 맡겨주세요"
+
+    OrderResponseV1:
+      type: object
+      properties:
+        order_id:
+          type: string
+          description: 주문 ID
+          example: "ORD20240406123456"
+        order_date:
+          type: string
+          format: date-time
+          description: 주문 일시
+          example: "2025-04-06T15:30:45Z"
+        status:
+          type: string
+          description: 주문 상태
+          example: "PENDING_PAYMENT"
+          enum:
+            - PENDING,
+            - PAID,
+            - CANCELLED,
+            - PAYMENT_FAILED,
+            - PAYMENT_ERROR,
+            - EXPIRED
+        items:
+          $ref : '#/components/schemas/OrderRequestV1Items'
+        shipping_address:
+          $ref : '#/components/schemas/OrderRequestV1ShippingAddress'
+        receiverInfo:
+          $ref : '#/components/schemas/OrderRequestV1ReceiverInfo'
+        memo:
+          type: string
+          description: 배송 메모
+          example: "부재시 경비실에 맡겨주세요"
+        total_product_amount:
+          type: integer
+          description: 상품 금액 합계
+          example: 30000
+        total_shipping_amount:
+          type: integer
+          description: 배송비 합계
+          example: 3000
+        payment_id:
+          type: string
+          description: 결제 ID
+          example: "PAY20240406123456"
+        payment_amount:
+          type: integer
+          description: 최종 결제 금액
+          example: 33000
+        payment_due_date:
+          type: string
+          format: date-time
+          description: 결제 마감 시간
+          example: "2025-04-06T16:30:45Z"
+        kakao_pay_readyUrl:
+          type: string
+          description: 카카오페이 결제 준비 URL
+          example: "https://online-pay.kakao.com/mockup/v1/1d61e5d6..."
+
+    PaymentRequest:
+      type: object
+      required:
+        - pg_token
+      properties:
+        pg_token:
+          type: string
+          description: 카카오페이 결제 승인 토큰
+          example: "T1234567890abcdefghij"
+
+    OrderRequestV1Items:
+      type: object
+      description : 주문 상품 목록
+      properties:
+        product_id:
+          type: integer
+          description: 상품 ID
+          example: 12345
+        product_name:
+          type: string
+          description: 상품명
+          example: "프리미엄 머그컵"
+        quantity:
+          type: integer
+          description: 수량
+          example: 2
+        price:
+          type: integer
+          description: 개당 가격
+          example: 15000
+
+    OrderRequestV1ShippingAddress:
+      type: object
+      properties:
+        zip_code:
+          type: string
+          description: 우편번호
+          example: "06164"
+        address:
+          type: string
+          description: 기본 주소
+          example: "서울특별시 강남구 테헤란로 123"
+        address_detail:
+          type: string
+          description: 상세 주소
+          example: "456동 789호"
+
+    OrderRequestV1ReceiverInfo:
+      type: object
+      properties:
+        name:
+          type: string
+          description: 수령인 이름
+          example: "홍길동"
+        phone:
+          type: string
+          description: 연락처
+          example: "010-1234-5678"
+
+
     ErrorResponse:
       type: object
       properties:
@@ -261,6 +623,13 @@ Components:
             - INVALID_SIZE_PARAM     # 유효하지 않은 사이즈 파라미터
             - PRODUCT_NOT_FOUND      # 상품을 찾을 수 없음
             - SERVER_ERROR           # 서버 오류
+            - INVALID_TYPE_ID_PARAM  # 잘못된 파라미터 요청
+            - INVALID_QUANTITY       # 잘못된 주문수량 요청
+            - REQUIRED_FIELD_MISSING # 필수 요청값 누락
+            - INVALID_PHONE_FORMAT   # 잘못된 형식의 핸드폰 번호 입력
+            - INVALID_ZIPCODE_FORMAT # 잘못된 형식의 우편번호 입력
+            - PRODUCT_NOT_FOUND      # 존재하지 않는 상품 요청
+            - INSUFFICIENT_STOCK     # 상품 재고 부족
           example: "INVALID_QUANTITY"
         error_message:
           type: string
