@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RequiredArgsConstructor
 @RestController("/v1/products")
-public class ProductsController {
+public class ProductController {
 
     @Operation(summary = "상품 리스트 조회 및 검색")
     @GetMapping
@@ -24,8 +24,7 @@ public class ProductsController {
             @RequestParam(required = false, defaultValue = "10") @Min(1) @Max(20) Integer length,
             @RequestParam(required = false) Integer minPrice,
             @RequestParam(required = false) Integer maxPrice,
-            @RequestParam(required = false, defaultValue = "asc") String sort
-            ){
+            @RequestParam(required = false, defaultValue = "asc") String sort){
 
         throw new NotImplementedException();
     }
