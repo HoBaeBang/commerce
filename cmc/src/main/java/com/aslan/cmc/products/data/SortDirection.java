@@ -1,8 +1,8 @@
 package com.aslan.cmc.products.data;
 
 public enum SortDirection {
-    asc,
-    desc;
+    ASC,
+    DESC;
 
     public static SortDirection fromString(String value) {
         try {
