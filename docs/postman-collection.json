@@ -1,0 +1,374 @@
+{
+	"info": {
+		"_postman_id": "commerce-api-collection",
+		"name": "Commerce API",
+		"description": "커머스 API 테스트 컬렉션",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "상품 관리",
+			"item": [
+				{
+					"name": "상품 목록 조회",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/products?keyword={{keyword}}&start={{start}}&length={{length}}&sort={{sort}}&minPrice={{minPrice}}&maxPrice={{maxPrice}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"products"
+							],
+							"query": [
+								{
+									"key": "keyword",
+									"value": "{{keyword}}",
+									"description": "검색 키워드"
+								},
+								{
+									"key": "start",
+									"value": "{{start}}",
+									"description": "시작 인덱스 (기본값: 1)"
+								},
+								{
+									"key": "length",
+									"value": "{{length}}",
+									"description": "페이지 크기 (기본값: 10)"
+								},
+								{
+									"key": "sort",
+									"value": "{{sort}}",
+									"description": "정렬 방향 (asc/desc)"
+								},
+								{
+									"key": "minPrice",
+									"value": "{{minPrice}}",
+									"description": "최소 가격"
+								},
+								{
+									"key": "maxPrice",
+									"value": "{{maxPrice}}",
+									"description": "최대 가격"
+								}
+							]
+						},
+						"description": "상품 목록을 조회합니다."
+					},
+					"response": []
+				},
+				{
+					"name": "상품 상세 조회",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/products/{{productId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"products",
+								"{{productId}}"
+							]
+						},
+						"description": "특정 상품의 상세 정보를 조회합니다."
+					},
+					"response": []
+				}
+			],
+			"description": "상품 관련 API"
+		},
+		{
+			"name": "주문 관리",
+			"item": [
+				{
+					"name": "주문 생성",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"items\": [\n    {\n      \"productId\": {{productId}},\n      \"quantity\": {{quantity}}\n    }\n  ],\n  \"shippingZipcode\": \"{{shippingZipcode}}\",\n  \"shippingAddress\": \"{{shippingAddress}}\",\n  \"shippingAddressDetail\": \"{{shippingAddressDetail}}\",\n  \"receiverName\": \"{{receiverName}}\",\n  \"receiverPhone\": \"{{receiverPhone}}\",\n  \"memo\": \"{{memo}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/orders",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"orders"
+							]
+						},
+						"description": "새로운 주문을 생성합니다."
+					},
+					"response": []
+				},
+				{
+					"name": "주문 조회",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/orders/{{orderId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"orders",
+								"{{orderId}}"
+							]
+						},
+						"description": "특정 주문의 상세 정보를 조회합니다."
+					},
+					"response": []
+				},
+				{
+					"name": "주문 취소",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/orders/{{orderId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"orders",
+								"{{orderId}}"
+							]
+						},
+						"description": "주문을 취소합니다."
+					},
+					"response": []
+				}
+			],
+			"description": "주문 관련 API"
+		},
+		{
+			"name": "결제 관리",
+			"item": [
+				{
+					"name": "카카오페이 결제 준비",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"orderId\": \"{{orderId}}\",\n  \"successUrl\": \"{{successUrl}}\",\n  \"cancelUrl\": \"{{cancelUrl}}\",\n  \"failUrl\": \"{{failUrl}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/payments/kakao/ready",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"payments",
+								"kakao",
+								"ready"
+							]
+						},
+						"description": "카카오페이 결제를 준비합니다."
+					},
+					"response": []
+				},
+				{
+					"name": "카카오페이 결제 승인",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"orderId\": \"{{orderId}}\",\n  \"pgToken\": \"{{pgToken}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/payments/kakao/approve",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"payments",
+								"kakao",
+								"approve"
+							]
+						},
+						"description": "카카오페이 결제를 승인합니다."
+					},
+					"response": []
+				},
+				{
+					"name": "결제 조회",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/v1/payments/{{paymentId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"payments",
+								"{{paymentId}}"
+							]
+						},
+						"description": "특정 결제의 상세 정보를 조회합니다."
+					},
+					"response": []
+				}
+			],
+			"description": "결제 관련 API"
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "keyword",
+			"value": "테스트",
+			"type": "string"
+		},
+		{
+			"key": "start",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "length",
+			"value": "10",
+			"type": "string"
+		},
+		{
+			"key": "sort",
+			"value": "asc",
+			"type": "string"
+		},
+		{
+			"key": "minPrice",
+			"value": "1000",
+			"type": "string"
+		},
+		{
+			"key": "maxPrice",
+			"value": "50000",
+			"type": "string"
+		},
+		{
+			"key": "productId",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "quantity",
+			"value": "2",
+			"type": "string"
+		},
+		{
+			"key": "shippingZipcode",
+			"value": "12345",
+			"type": "string"
+		},
+		{
+			"key": "shippingAddress",
+			"value": "서울시 강남구 테헤란로 123",
+			"type": "string"
+		},
+		{
+			"key": "shippingAddressDetail",
+			"value": "456동 789호",
+			"type": "string"
+		},
+		{
+			"key": "receiverName",
+			"value": "홍길동",
+			"type": "string"
+		},
+		{
+			"key": "receiverPhone",
+			"value": "010-1234-5678",
+			"type": "string"
+		},
+		{
+			"key": "memo",
+			"value": "배송 메모",
+			"type": "string"
+		},
+		{
+			"key": "orderId",
+			"value": "order-uuid-here",
+			"type": "string"
+		},
+		{
+			"key": "paymentId",
+			"value": "payment-uuid-here",
+			"type": "string"
+		},
+		{
+			"key": "pgToken",
+			"value": "pg-token-here",
+			"type": "string"
+		},
+		{
+			"key": "successUrl",
+			"value": "http://localhost:3000/success",
+			"type": "string"
+		},
+		{
+			"key": "cancelUrl",
+			"value": "http://localhost:3000/cancel",
+			"type": "string"
+		},
+		{
+			"key": "failUrl",
+			"value": "http://localhost:3000/fail",
+			"type": "string"
+		}
+	]
+} 
