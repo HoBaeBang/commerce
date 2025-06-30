@@ -1,7 +1,10 @@
 package com.aslan.cmc.products.service;
 
 import com.aslan.cmc.products.data.SortDirection;
+import com.aslan.cmc.products.data.dto.ProductDetailDto;
 import com.aslan.cmc.products.data.dto.ProductListResponseDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface ProductService {
     /**
@@ -17,4 +20,19 @@ public interface ProductService {
      */
     ProductListResponseDto getProductsList(String keyword, Integer start, Integer length, Integer minPrice, Integer maxPrice, SortDirection sort);
 
+    /**
+     * 상품 목록을 페이지네이션으로 조회합니다.
+     *
+     * @param pageable 페이지 정보
+     * @return 상품 목록 페이지
+     */
+    Page<ProductDetailDto> getProductsList(Pageable pageable);
+
+    /**
+     * 상품 상세 정보를 조회합니다.
+     *
+     * @param productId 상품 ID
+     * @return 상품 상세 정보 DTO
+     */
+    ProductDetailDto getProductDetail(Long productId);
 }
